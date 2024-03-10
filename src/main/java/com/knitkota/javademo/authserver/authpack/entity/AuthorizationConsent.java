@@ -7,6 +7,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
+import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 
 @Entity
@@ -17,6 +18,8 @@ public class AuthorizationConsent {
 	private String registeredClientId;
 	@Id
 	private String principalName;
+
+	@Lob
 	@Column(length = 1000)
 	private String authorities;
 

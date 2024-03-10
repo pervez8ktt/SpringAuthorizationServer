@@ -1,5 +1,6 @@
 package com.knitkota.javademo.authserver.authpack.entity.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -10,5 +11,5 @@ import com.knitkota.javademo.authserver.authpack.entity.Client;
 
 @Repository
 public interface ClientRepository extends JpaRepository<Client, String> {
-	Optional<Client> findByClientId(String clientId);
+	List<Client> findByClientId(String clientId);
 }

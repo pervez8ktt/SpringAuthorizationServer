@@ -3,6 +3,7 @@ package com.knitkota.javademo.authserver.authpack.services;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -41,7 +42,14 @@ public class JpaRegisteredClientRepository implements RegisteredClientRepository
 	@Override
 	public void save(RegisteredClient registeredClient) {
 		Assert.notNull(registeredClient, "registeredClient cannot be null");
-		this.clientRepository.save(toEntity(registeredClient));
+		
+		List<Client> clientId = this.clientRepository.findByClientId(registeredClient.getClientId());
+		
+		if(clientId.isEmpty()) {
+			this.clientRepository.save(toEntity(registeredClient));
+		}
+		
+		
 	}
 
 	@Override
@@ -53,7 +61,14 @@ public class JpaRegisteredClientRepository implements RegisteredClientRepository
 	@Override
 	public RegisteredClient findByClientId(String clientId) {
 		Assert.hasText(clientId, "clientId cannot be empty");
-		return this.clientRepository.findByClientId(clientId).map(this::toObject).orElse(null);
+		
+		List<Client> clientList = this.clientRepository.findByClientId(clientId);
+		
+		if(clientList.isEmpty()) {
+			return null;
+		}
+		
+		return Optional.ofNullable(clientList.get(0)).map(this::toObject).orElse(null);
 	}
 
 	private RegisteredClient toObject(Client client) {

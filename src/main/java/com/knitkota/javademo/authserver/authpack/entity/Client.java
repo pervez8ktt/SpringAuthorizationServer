@@ -5,6 +5,7 @@ import java.time.Instant;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 
 @Entity
@@ -17,18 +18,32 @@ public class Client {
 	private String clientSecret;
 	private Instant clientSecretExpiresAt;
 	private String clientName;
+	
+	@Lob
 	@Column(length = 1000)
 	private String clientAuthenticationMethods;
+	
+	@Lob
 	@Column(length = 1000)
 	private String authorizationGrantTypes;
+	
+	@Lob
 	@Column(length = 1000)
 	private String redirectUris;
+	
+	@Lob
 	@Column(length = 1000)
 	private String postLogoutRedirectUris;
+	
+	@Lob
 	@Column(length = 1000)
 	private String scopes;
+	
+	@Lob
 	@Column(length = 2000)
 	private String clientSettings;
+	
+	@Lob
 	@Column(length = 2000)
 	private String tokenSettings;
 
