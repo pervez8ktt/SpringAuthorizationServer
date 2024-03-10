@@ -44,14 +44,13 @@ import com.nimbusds.jose.proc.SecurityContext;
 @EnableWebSecurity
 public class SecurityConfig {
 
-	@Bean 
+	@Bean
 	@Order(1)
-	public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http)
-			throws Exception {
-		
-		applyDefaultSecurity(http);
-		
-//		OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
+	public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http) throws Exception {
+
+//		applyDefaultSecurity(http);
+
+		OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
 //		http.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
 //			.oidc(Customizer.withDefaults());	// Enable OpenID Connect 1.0
 //		http
@@ -68,63 +67,50 @@ public class SecurityConfig {
 //				.jwt(Customizer.withDefaults()));
 //
 //		return http.build();
-		
+
 //		OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
-		http
-		.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
-				.oidc(oidc -> oidc.clientRegistrationEndpoint(clientRegistrationEndpoint -> {	
-					clientRegistrationEndpoint
-							.authenticationProviders(CustomClientMetadataConfig.configureCustomClientMetadataConverters());	
+		http.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
+				.oidc(oidc -> oidc.clientRegistrationEndpoint(clientRegistrationEndpoint -> {
+					clientRegistrationEndpoint.authenticationProviders(
+							CustomClientMetadataConfig.configureCustomClientMetadataConverters());
 				}));
-		http.oauth2ResourceServer(oauth2ResourceServer ->
-				oauth2ResourceServer.jwt(Customizer.withDefaults()));
+
+		http.exceptionHandling((exceptions) -> exceptions.defaultAuthenticationEntryPointFor(
+				new LoginUrlAuthenticationEntryPoint("/login"), new MediaTypeRequestMatcher(MediaType.TEXT_HTML)))
+				.oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer.jwt(Customizer.withDefaults()));
 
 		return http.build();
-		
+
 	}
-	
+
 	public static void applyDefaultSecurity(HttpSecurity http) throws Exception {
-		
-		
-		
-		OAuth2AuthorizationServerConfigurer authorizationServerConfigurer =
-				new OAuth2AuthorizationServerConfigurer();
-		RequestMatcher endpointsMatcher = authorizationServerConfigurer
-				.getEndpointsMatcher();
 
-		http
-			.securityMatcher(endpointsMatcher)
-			.authorizeHttpRequests(authorize ->
-				authorize
-				.requestMatchers("/oauth2/**", "/connect/register").permitAll()
-				.anyRequest().authenticated()
-			)
-			.csrf(csrf -> csrf.ignoringRequestMatchers(endpointsMatcher))
-			.apply(authorizationServerConfigurer);
+		OAuth2AuthorizationServerConfigurer authorizationServerConfigurer = new OAuth2AuthorizationServerConfigurer();
+		RequestMatcher endpointsMatcher = authorizationServerConfigurer.getEndpointsMatcher();
+
+		http.securityMatcher(endpointsMatcher)
+				.authorizeHttpRequests(authorize -> authorize.requestMatchers("/oauth2/**", "/connect/register")
+						.permitAll().anyRequest().authenticated())
+				.csrf(csrf -> csrf.ignoringRequestMatchers(endpointsMatcher)).apply(authorizationServerConfigurer);
 	}
 
-	@Bean 
+	@Bean
 	@Order(2)
-	public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http)
-			throws Exception {
-		http.csrf((_csrf)->_csrf.disable()).cors((_cors)->_cors.disable())
-			.authorizeHttpRequests((authorize) -> authorize
+	public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
+		http.csrf((_csrf) -> _csrf.disable()).cors((_cors) -> _cors.disable())
+				.authorizeHttpRequests((authorize) -> authorize
 //					.requestMatchers("/oauth2/authorize").permitAll()
-				.anyRequest().authenticated()
-			)
-			// Form login handles the redirect to the login page from the
-			// authorization server filter chain
-			.formLogin(Customizer.withDefaults());
+						.anyRequest().authenticated())
+				// Form login handles the redirect to the login page from the
+				// authorization server filter chain
+				.formLogin(Customizer.withDefaults());
 
 		return http.build();
 	}
 
-	@Bean 
+	@Bean
 	public UserDetailsService userDetailsService() {
-		UserDetails userDetails = User.withDefaultPasswordEncoder()
-				.username("user")
-				.password("password")
-				.roles("USER")
+		UserDetails userDetails = User.withDefaultPasswordEncoder().username("user").password("password").roles("USER")
 				.build();
 
 		return new InMemoryUserDetailsManager(userDetails);
@@ -164,38 +150,35 @@ public class SecurityConfig {
 //		
 //	}
 
-	@Bean 
+	@Bean
 	public JWKSource<SecurityContext> jwkSource() {
 		KeyPair keyPair = generateRsaKey();
 		RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
 		RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
-		RSAKey rsaKey = new RSAKey.Builder(publicKey)
-				.privateKey(privateKey)
-				.keyID(UUID.randomUUID().toString())
+		RSAKey rsaKey = new RSAKey.Builder(publicKey).privateKey(privateKey).keyID(UUID.randomUUID().toString())
 				.build();
 		JWKSet jwkSet = new JWKSet(rsaKey);
 		return new ImmutableJWKSet<>(jwkSet);
 	}
 
-	private static KeyPair generateRsaKey() { 
+	private static KeyPair generateRsaKey() {
 		KeyPair keyPair;
 		try {
 			KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
 			keyPairGenerator.initialize(2048);
 			keyPair = keyPairGenerator.generateKeyPair();
-		}
-		catch (Exception ex) {
+		} catch (Exception ex) {
 			throw new IllegalStateException(ex);
 		}
 		return keyPair;
 	}
 
-	@Bean 
+	@Bean
 	public JwtDecoder jwtDecoder(JWKSource<SecurityContext> jwkSource) {
 		return OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource);
 	}
 
-	@Bean 
+	@Bean
 	public AuthorizationServerSettings authorizationServerSettings() {
 		return AuthorizationServerSettings.builder().build();
 	}

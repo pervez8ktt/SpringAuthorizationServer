@@ -36,7 +36,7 @@ public class InitializationService {
 				.clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
 				.clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_POST)
 
-				.authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
+//				.authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
 				.authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
 				.authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
 
@@ -46,7 +46,8 @@ public class InitializationService {
 				.postLogoutRedirectUri("http://127.0.0.1:8080/").scope(OidcScopes.OPENID).scope(OidcScopes.PROFILE)
 				.clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
 
-				.scope("client.create").scope("client.read").build();
+//				.scope("client.create").scope("client.read")
+				.build();
 
 		jpaRegisteredClientRepository.save(registrarClient1);
 	}
