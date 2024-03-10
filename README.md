@@ -75,5 +75,21 @@ password: password
 
 when authentication done, identity server will redirect to provided redirect_url with code and state request param<br>
 
-with the help of state, we can confirm csrf attack and code is used to get the access token
+with the help of state, we can confirm csrf attack and code is used to get the access token <br><br>
+
+To get access token:
+
+```curl
+
+URL: http://localhost:9000/oauth2/token
+
+Headers:
+	'Content-Type: application/x-www-form-urlencoded'
+	'Authorization: Basic cmVnaXN0cmFyLWNsaWVudDpzZWNyZXQ='
+
+grant_type:authorization_code
+code:<received_at_redirect_url>
+redirect_uri:https://oauth.pstmn.io/v1/callback
+client_id: application-client
+client_secret: secret
 
