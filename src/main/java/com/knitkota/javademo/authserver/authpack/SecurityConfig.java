@@ -84,6 +84,9 @@ public class SecurityConfig {
 	}
 	
 	public static void applyDefaultSecurity(HttpSecurity http) throws Exception {
+		
+		
+		
 		OAuth2AuthorizationServerConfigurer authorizationServerConfigurer =
 				new OAuth2AuthorizationServerConfigurer();
 		RequestMatcher endpointsMatcher = authorizationServerConfigurer
@@ -93,7 +96,7 @@ public class SecurityConfig {
 			.securityMatcher(endpointsMatcher)
 			.authorizeHttpRequests(authorize ->
 				authorize
-				.requestMatchers("/oauth/token").permitAll()
+				.requestMatchers("/oauth2/**", "/connect/register").permitAll()
 				.anyRequest().authenticated()
 			)
 			.csrf(csrf -> csrf.ignoringRequestMatchers(endpointsMatcher))
@@ -106,7 +109,7 @@ public class SecurityConfig {
 			throws Exception {
 		http.csrf((_csrf)->_csrf.disable()).cors((_cors)->_cors.disable())
 			.authorizeHttpRequests((authorize) -> authorize
-					.requestMatchers("/oauth/token").permitAll()
+//					.requestMatchers("/oauth2/authorize").permitAll()
 				.anyRequest().authenticated()
 			)
 			// Form login handles the redirect to the login page from the

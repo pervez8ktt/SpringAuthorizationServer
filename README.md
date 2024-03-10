@@ -35,3 +35,45 @@ Into Authorization key, we need to send client_id:secret key<br><br>
 
 We have defined above client id and secret key into [IntializationServer](src/main/java/com/knitkota/javademo/authserver/authpack/services/InitializationService.java)<br><br>
 
+
+#### Authorization Code
+
+To implement authorization code, first we need to provide /oauth2/authorize then get the access token
+
+##### Step 1
+
+Create a get type url as below:
+
+```code
+
+url: http://localhost:9000/oauth2/authorize
+
+method: GET
+
+QUERY Params:
+
+response_type:code
+client_id:application-client
+state:fjkwja
+scope:openid profile
+redirect_uri:http://127.0.0.1:8080/login/oauth2/code/oidc-client
+
+```
+
+The CURL for above:
+
+```curl
+
+curl --location 'http://localhost:9000/oauth2/authorize?response_type=code&client_id=application-client&state=fjkwja&scope=openid%20profile&redirect_uri=http%3A%2F%2F127.0.0.1%3A8080%2Flogin%2Foauth2%2Fcode%2Foidc-client' \
+
+```
+
+When we open above url in browser, identity server will ask for user credentials. Into this you need to pass<br>
+
+username: user <br>
+password: password
+
+when authentication done, identity server will redirect to provided redirect_url with code and state request param<br>
+
+with the help of state, we can confirm csrf attack and code is used to get the access token
+
