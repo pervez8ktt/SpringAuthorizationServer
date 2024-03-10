@@ -50,6 +50,28 @@ public class InitializationService {
 				.build();
 
 		jpaRegisteredClientRepository.save(registrarClient1);
+		
+		
+		RegisteredClient registrarClient2 = RegisteredClient.withId(UUID.randomUUID().toString())
+				.clientId("application-user-client").clientSecret("{noop}secret")
+
+				.clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+				.clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_POST)
+
+//				.authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
+				.authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+				.authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
+
+				.redirectUri("http://127.0.0.1:8080/login/oauth2/code/oidc-client")
+				.redirectUri("https://oauth.pstmn.io/v1/callback")
+
+				.postLogoutRedirectUri("http://127.0.0.1:8080/").scope(OidcScopes.OPENID).scope(OidcScopes.PROFILE)
+				.clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
+
+//				.scope("client.create").scope("client.read")
+				.build();
+
+		jpaRegisteredClientRepository.save(registrarClient2);
 	}
 
 }
