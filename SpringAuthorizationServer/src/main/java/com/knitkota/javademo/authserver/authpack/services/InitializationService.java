@@ -40,10 +40,10 @@ public class InitializationService {
 				.authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
 				.authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
 
-				.redirectUri("http://127.0.0.1:8080/login/oauth2/code/oidc-client")
+				.redirectUri("http://127.0.0.1:3000/login/oauth2/code/oidc-client")
 				.redirectUri("https://oauth.pstmn.io/v1/callback")
 
-				.postLogoutRedirectUri("http://127.0.0.1:8080/").scope(OidcScopes.OPENID).scope(OidcScopes.PROFILE)
+				.postLogoutRedirectUri("http://127.0.0.1:3000/").scope(OidcScopes.OPENID).scope(OidcScopes.PROFILE)
 				.clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
 
 //				.scope("client.create").scope("client.read")
@@ -62,10 +62,10 @@ public class InitializationService {
 				.authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
 				.authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
 
-				.redirectUri("http://127.0.0.1:8080/login/oauth2/code/oidc-client")
+				.redirectUri("http://127.0.0.1:3000/login/oauth2/code/oidc-client")
 				.redirectUri("https://oauth.pstmn.io/v1/callback")
 
-				.postLogoutRedirectUri("http://127.0.0.1:8080/").scope(OidcScopes.OPENID).scope(OidcScopes.PROFILE)
+				.postLogoutRedirectUri("http://127.0.0.1:3000/").scope(OidcScopes.OPENID).scope(OidcScopes.PROFILE)
 				.clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
 
 //				.scope("client.create").scope("client.read")
