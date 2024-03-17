@@ -1,22 +1,26 @@
 
 import { createSlice } from '@reduxjs/toolkit';
 
-const initialState = {codeChallenge:null, clientId: 'application-user-client', isLoggedIn: false};
+const initialState = {codeVerifier:'', clientId: 'application-user-client', isLoggedIn: false, pkceState: ''};
 
 const pkceSlice = createSlice({
 	
 	name: 'pkce',
 	initialState: initialState,
 	reducers:{
-		setCodeGenerator(state, action){
+		setCodeVerifier(state, action){
 			// It is safe because createSlice internally create immutable object
-			state.codeChallenge = action.payload.codeChallenge;
+			state.codeVerifier = action.payload.codeVerifier;
 		},
 		setClientId(state, action){
 			state.clientId = action.payload.clientId;
 		},
 		setLoggedIn(state, action){
 			state.isLoggedIn = action.payload.isLoggedIn;
+		},
+		setPkceState(state, action){
+			
+			state.pkceState = action.payload.pkceState;
 		}
 	}
 });

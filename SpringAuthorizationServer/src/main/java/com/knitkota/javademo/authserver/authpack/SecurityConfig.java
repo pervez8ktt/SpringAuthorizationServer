@@ -79,6 +79,8 @@ public class SecurityConfig {
 				new LoginUrlAuthenticationEntryPoint("/login"), new MediaTypeRequestMatcher(MediaType.TEXT_HTML)))
 				.oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer.jwt(Customizer.withDefaults()));
 
+		http.cors((cors)-> cors.disable());
+		
 		return http.build();
 
 	}
@@ -88,7 +90,9 @@ public class SecurityConfig {
 		OAuth2AuthorizationServerConfigurer authorizationServerConfigurer = new OAuth2AuthorizationServerConfigurer();
 		RequestMatcher endpointsMatcher = authorizationServerConfigurer.getEndpointsMatcher();
 
-		http.securityMatcher(endpointsMatcher)
+		http
+		.cors((cors)-> cors.disable())
+		.securityMatcher(endpointsMatcher)
 				.authorizeHttpRequests(authorize -> authorize.requestMatchers("/oauth2/**", "/connect/register")
 						.permitAll().anyRequest().authenticated())
 				.csrf(csrf -> csrf.ignoringRequestMatchers(endpointsMatcher)).apply(authorizationServerConfigurer);

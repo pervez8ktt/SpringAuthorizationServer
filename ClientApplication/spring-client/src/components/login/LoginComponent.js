@@ -5,33 +5,39 @@ import { pkceAction } from "../../redux_data/pkce-slice";
 
 const LoginComponent = (props) => {
 
-    const codeChallenge = useSelector(state => state.pkce.codeChallenge)
+
+
+    // const codeVerifier = useSelector(state => state.pkce.codeVerifier)
     const clientId = useSelector(state => state.pkce.clientId)
+    const stateRedux = useSelector(state => state.pkce.pkceState)
 
     const dispatch = useDispatch();
 
     const [codeVerifier, setCodeVerifier] = useState('');
-//   const [codeChallenge, setCodeChallenge] = useState('');
+    const [state, setState] = useState('');
+  // const [codeChallenge, setCodeChallenge] = useState('');
+  
 
-  const generateCode = () => {
-    const challenge = generateChallenge(codeVerifier);
-    // setCodeChallenge(challenge);
+  
 
-    dispatch(pkceAction.setCodeGenerator({codeChallenge: challenge}))
-
-  };
-
+  
 
   const updateClientId = (event) => {
     dispatch(pkceAction.setClientId({clientId: event.target.value}))
   }
 
-    // Define the base URL
+    
+
+    const loginHandler = () =>{
+
+      const codeChallenge = generateChallenge(codeVerifier);
+
+// Define the base URL
 var baseUrl = "http://localhost:9000/oauth2/authorize";
 
 // Define parameters
 var responseType = "code";
-var state = "fjkwja";
+// var state = "fjkwja";
 var scope = "openid profile";
 var redirectUri = "http://127.0.0.1:3000/login/oauth2/code/oidc-client";
 
@@ -46,22 +52,35 @@ var authorizationUrl = baseUrl + "?response_type=" + responseType +
 
 console.log(authorizationUrl); // Print the URL
 
-    const loginHandler = () =>{
-        window.open(authorizationUrl);
+      localStorage.setItem('state',state)
+      localStorage.setItem('codeVerifier',codeVerifier)
+      localStorage.setItem('clientId',clientId)
+
+      dispatch(pkceAction.setPkceState({pkceState: state}))
+        // window.open(authorizationUrl);
+        window.location.href = authorizationUrl
     }
 
     return <><input
     type="text"
+    placeholder="Code verifier"
     value={codeVerifier}
     onChange={(e) => setCodeVerifier(e.target.value)}
   />
   <input
     type="text"
+    placeholder="State"
+    value={state}
+    onChange={(e) => setState(e.target.value)}
+  />
+  <input
+    type="text"
+    placeholder="Client Id"
     value={clientId}
     onChange={updateClientId}
   />
-  <button onClick={generateCode}>Generate Code</button>
-  <p>Code Challenge: {codeChallenge}</p>
+  
+  
   
   <button onClick={loginHandler}>Login</button>
   </>
