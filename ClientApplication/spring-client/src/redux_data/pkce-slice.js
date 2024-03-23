@@ -1,7 +1,7 @@
 
 import { createSlice } from '@reduxjs/toolkit';
 
-const initialState = {codeVerifier:'', clientId: 'application-user-client', isLoggedIn: false, pkceState: ''};
+const initialState = {codeVerifier:'', clientId: 'application-pkce-client', isLoggedIn: false, pkceState: ''};
 
 const pkceSlice = createSlice({
 	

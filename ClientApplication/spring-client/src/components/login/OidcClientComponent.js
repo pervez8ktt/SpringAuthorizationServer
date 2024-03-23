@@ -79,7 +79,7 @@ const OidcClientComponent = (props) => {
         body: new URLSearchParams({
           grant_type: 'authorization_code',
           client_id: clientId,
-          client_secret: clientSecret,
+          // client_secret: clientSecret,
           redirect_uri: redirectUri,
           code: code,
           code_verifier: codeVerifier,

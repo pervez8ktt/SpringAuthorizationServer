@@ -32,6 +32,9 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.knitkota.javademo.authserver.authpack.services.CustomClientMetadataConfig;
 import com.nimbusds.jose.jwk.JWKSet;
@@ -79,29 +82,16 @@ public class SecurityConfig {
 				new LoginUrlAuthenticationEntryPoint("/login"), new MediaTypeRequestMatcher(MediaType.TEXT_HTML)))
 				.oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer.jwt(Customizer.withDefaults()));
 
-		http.cors((cors)-> cors.disable());
-		
+		http.cors(Customizer.withDefaults());
+
 		return http.build();
 
-	}
-
-	public static void applyDefaultSecurity(HttpSecurity http) throws Exception {
-
-		OAuth2AuthorizationServerConfigurer authorizationServerConfigurer = new OAuth2AuthorizationServerConfigurer();
-		RequestMatcher endpointsMatcher = authorizationServerConfigurer.getEndpointsMatcher();
-
-		http
-		.cors((cors)-> cors.disable())
-		.securityMatcher(endpointsMatcher)
-				.authorizeHttpRequests(authorize -> authorize.requestMatchers("/oauth2/**", "/connect/register")
-						.permitAll().anyRequest().authenticated())
-				.csrf(csrf -> csrf.ignoringRequestMatchers(endpointsMatcher)).apply(authorizationServerConfigurer);
 	}
 
 	@Bean
 	@Order(2)
 	public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-		http.csrf((_csrf) -> _csrf.disable()).cors((_cors) -> _cors.disable())
+		http.csrf((_csrf) -> _csrf.disable()).cors(Customizer.withDefaults())
 				.authorizeHttpRequests((authorize) -> authorize
 //					.requestMatchers("/oauth2/authorize").permitAll()
 						.anyRequest().authenticated())
@@ -185,6 +175,18 @@ public class SecurityConfig {
 	@Bean
 	public AuthorizationServerSettings authorizationServerSettings() {
 		return AuthorizationServerSettings.builder().build();
+	}
+
+	@Bean
+	public CorsConfigurationSource corsConfigurationSource() {
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		CorsConfiguration config = new CorsConfiguration();
+		config.addAllowedHeader("*");
+		config.addAllowedMethod("*");
+		config.addAllowedOrigin("http://127.0.0.1:3000");
+		config.setAllowCredentials(true);
+		source.registerCorsConfiguration("/**", config);
+		return source;
 	}
 
 }
