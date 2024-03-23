@@ -29,6 +29,18 @@ public class InitializationService {
 				.scope("client.read").build();
 
 		jpaRegisteredClientRepository.save(registrarClient);
+		
+		RegisteredClient serviceClient = RegisteredClient.withId(UUID.randomUUID().toString())
+				.clientId("application-client").clientSecret("{noop}secret")
+				.clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+				.clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_POST)
+//				.clientAuthenticationMethod(ClientAuthenticationMethod.NONE)
+				.authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
+				.scope("client.create")
+				.scope(OidcScopes.PROFILE)
+				.scope("client.read").build();
+
+		jpaRegisteredClientRepository.save(serviceClient);
 
 		RegisteredClient registrarClient1 = RegisteredClient.withId(UUID.randomUUID().toString())
 				.clientId("application-client").clientSecret("{noop}secret")

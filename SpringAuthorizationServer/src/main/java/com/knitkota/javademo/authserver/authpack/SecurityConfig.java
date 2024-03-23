@@ -53,6 +53,10 @@ public class SecurityConfig {
 
 //		applyDefaultSecurity(http);
 
+		http.authorizeHttpRequests((authorize) -> authorize
+				.requestMatchers("/oauth2/token").permitAll()
+				);
+		
 		OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
 //		http.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
 //			.oidc(Customizer.withDefaults());	// Enable OpenID Connect 1.0
@@ -72,6 +76,7 @@ public class SecurityConfig {
 //		return http.build();
 
 //		OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
+		
 		http.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
 				.oidc(oidc -> oidc.clientRegistrationEndpoint(clientRegistrationEndpoint -> {
 					clientRegistrationEndpoint.authenticationProviders(
@@ -93,7 +98,7 @@ public class SecurityConfig {
 	public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
 		http.csrf((_csrf) -> _csrf.disable()).cors(Customizer.withDefaults())
 				.authorizeHttpRequests((authorize) -> authorize
-//					.requestMatchers("/oauth2/authorize").permitAll()
+					.requestMatchers("/oauth2/token").permitAll()
 						.anyRequest().authenticated())
 				// Form login handles the redirect to the login page from the
 				// authorization server filter chain
