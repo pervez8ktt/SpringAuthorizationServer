@@ -49,7 +49,12 @@ const ArticleComponent = (props) =>{
             }
 
 
-    return <><p>Article component</p><br></br><p>{articalResponse}</p></>
+            const reload = () =>{
+                callArticalAPI()
+            }
+
+
+    return <><p>Article component</p><br></br><p>{articalResponse}</p><p><button onClick={reload}>Re-load</button></p></>
 
 }
 
