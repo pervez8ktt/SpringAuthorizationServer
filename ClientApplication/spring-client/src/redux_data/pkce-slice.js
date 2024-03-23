@@ -1,7 +1,7 @@
 
 import { createSlice } from '@reduxjs/toolkit';
 
-const initialState = {codeVerifier:'', clientId: 'application-pkce-client', isLoggedIn: false, pkceState: ''};
+const initialState = {codeVerifier:'', clientId: 'application-pkce-client', isLoggedIn: false, pkceState: '', accessToken: null};
 
 const pkceSlice = createSlice({
 	
@@ -17,6 +17,13 @@ const pkceSlice = createSlice({
 		},
 		setLoggedIn(state, action){
 			state.isLoggedIn = action.payload.isLoggedIn;
+
+			if(state.isLoggedIn==true){
+				state.accessToken = action.payload.accessToken;
+			}else{
+				state.accessToken = null
+			}
+
 		},
 		setPkceState(state, action){
 			

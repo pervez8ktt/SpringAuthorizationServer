@@ -93,7 +93,7 @@ const OidcClientComponent = (props) => {
       const data = await response.json();
       setAccessToken(data.access_token);
 
-      dispatch(pkceAction.setLoggedIn({isLoggedIn: true}))
+      dispatch(pkceAction.setLoggedIn({isLoggedIn: true, accessToken: data.access_token}))
 
       navigate("/")
 

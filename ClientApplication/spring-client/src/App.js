@@ -4,6 +4,7 @@ import LoginComponent from './components/login/LoginComponent';
 import { Route, Routes } from 'react-router-dom';
 import OidcClientComponent from './components/login/OidcClientComponent';
 import { useSelector } from 'react-redux';
+import ArticleComponent from './components/ArticleComponent';
 
 function App() {
 
@@ -21,7 +22,7 @@ function App() {
             <Route path="/" element={<LoginComponent />} />
             
         </Routes>
-    :<><p>Already Logged In!!!</p></>
+    :<><ArticleComponent></ArticleComponent></>
     }
 
       
