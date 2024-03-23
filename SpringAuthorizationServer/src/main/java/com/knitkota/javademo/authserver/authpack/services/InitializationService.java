@@ -50,8 +50,7 @@ public class InitializationService {
 				.build();
 
 		jpaRegisteredClientRepository.save(registrarClient1);
-		
-		
+
 		RegisteredClient registrarClient2 = RegisteredClient.withId(UUID.randomUUID().toString())
 				.clientId("application-user-client").clientSecret("{noop}secret")
 
@@ -72,6 +71,31 @@ public class InitializationService {
 				.build();
 
 		jpaRegisteredClientRepository.save(registrarClient2);
+
+		RegisteredClient registrarClientPkce = RegisteredClient.withId(UUID.randomUUID().toString())
+				.clientId("application-pkce-client")
+//				.clientSecret("{noop}secret")
+
+//				.clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+//				.clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_POST)
+				.clientAuthenticationMethod(ClientAuthenticationMethod.NONE)
+
+//				.authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
+				.authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+//				.authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
+
+				.redirectUri("http://127.0.0.1:3000/login/oauth2/code/oidc-client")
+				.redirectUri("https://oauth.pstmn.io/v1/callback")
+
+				.postLogoutRedirectUri("http://127.0.0.1:3000/").scope(OidcScopes.OPENID).scope(OidcScopes.PROFILE)
+				.clientSettings(
+						ClientSettings.builder().requireAuthorizationConsent(true).requireProofKey(true).build())
+
+//				.scope("client.create").scope("client.read")
+				.build();
+
+		jpaRegisteredClientRepository.save(registrarClientPkce);
+
 	}
 
 }
